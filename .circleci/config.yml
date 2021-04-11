@@ -1,0 +1,13 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: debian:strech
+    steps:
+      - checkout:
+      - run:
+          name: Greeting
+          command: echo Hello, world!
+      - run:
+          name: Print The Current Time
+          command: date
