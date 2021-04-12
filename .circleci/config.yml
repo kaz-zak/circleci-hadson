@@ -2,12 +2,15 @@ version: 2
 jobs:
   build:
     docker:
-      - image: debian:stretch
+      - image: node:10.13.0
     steps:
-      - checkout:
+      - checkout
       - run:
-          name: Greeting
-          command: echo Hello, world!
+          name: Install Dependencies
+          command: yarn
       - run:
-          name: Print The Current Time
-          command: date
+          name: Build
+          command: yarn build
+      - run:
+          name: Check Dist
+          command: ls -la dist
