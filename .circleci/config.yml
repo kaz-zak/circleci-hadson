@@ -21,20 +21,17 @@ jobs:
            paths:
              - ~/workspace/node_modules
            key: yarn-{{ .Branch }}-{{ checksum "yarn.lock" }}
+      - persist_to_workspace:
+          root: . # workspaceのrootをworking_directoryからの相対パスで指定
+          paths:
+            - . # 共有するパスをworking_direcrotyからの相対パスで指定
   test:
     working_directory: ~/workspace
     docker:
       - image: node:10.13.0
     steps:
-      - checkout
-      - restore_cache:
-         key: yarn-{{ .Branch }}-{{ checksum "yarn.lock" }}
-      - run:
-         name: Install Dependencies
-         command: yarn
-      - run:
-         name: Build
-         command: yarn build
+      - attach_workspace: # workspaceをアタッチする
+          at: .
       - run:
          name: Test
          command: yarn test
