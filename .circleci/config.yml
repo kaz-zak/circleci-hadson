@@ -21,3 +21,28 @@ jobs:
            paths:
              - ~/workspace/node_modules
            key: yarn-{{ .Branch }}-{{ checksum "yarn.lock" }}
+  test:
+    working_directory: ~/workspace
+    docker:
+      - image: node:10.13.0
+    steps:
+      - checkout
+      - restore_cache:
+         key: yarn-{{ .Branch }}-{{ checksum "yarn.lock" }}
+      - run:
+         name: Install Dependencies
+         command: yarn
+      - run:
+         name: Build
+         command: yarn build
+      - run:
+         name: Test
+         command: yarn test
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
+      - test:
+          requires:  # buildが成功したらtestを実行する
+            - build
