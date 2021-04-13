@@ -1,10 +1,13 @@
 version: 2
 jobs:
   build:
+    working_directory: ~/workspace
     docker:
       - image: node:10.13.0
     steps:
       - checkout
+      - restore_cache:
+          key: yarn-{{ .Branch }}-{{ checksum "yarn.lock" }}
       - run:
           name: Install Dependencies
           command: yarn
@@ -14,3 +17,7 @@ jobs:
       - run:
           name: Check Dist
           command: ls -la dist
+      -  save_cache:
+           paths:
+             - ~/workspace/node_modules
+           key: yarn-{{ .Branch }}-{{ checksum "yarn.lock" }}
